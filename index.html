@@ -173,8 +173,8 @@
 <div id="muteBtn" title="mute">
   <svg viewBox="0 0 24 24">
     <path class="spk" d="M4 9v6h4l5 4V5L8 9H4z"/>
-    <g id="waves"><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></g>
-    <g id="cross" style="display:none"><path d="M16 9l6 6"/><path d="M22 9l-6 6"/></g>
+    <g id="waves" style="display:none"><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></g>
+    <g id="cross"><path d="M16 9l6 6"/><path d="M22 9l-6 6"/></g>
   </svg>
 </div>
 <div id="viewBtn" title="toggle view (T)">ANGLE · T</div>
@@ -1863,7 +1863,7 @@ $('menuBtn').addEventListener('click',()=>{
   if(AudioSys.ready)AudioSys.siren(0);
   resetRun();
 });
-$('muteBtn').addEventListener('pointerdown',e=>{e.stopPropagation();AudioSys.init();AudioSys.toggleMute();});
+$('muteBtn').addEventListener('pointerdown',e=>{e.stopPropagation();AudioSys.init();if(AudioSys.ctx&&AudioSys.ctx.state==='suspended')AudioSys.ctx.resume();AudioSys.toggleMute();});
 $('viewBtn').addEventListener('pointerdown',e=>{e.stopPropagation();toggleCam();});
 
 let fpsFrames=0,fpsTime=0;
@@ -1971,8 +1971,6 @@ function update(dt,time){
 
 let last=performance.now();
 function frame(now){
-document.querySelector('#muteBtn #waves').style.display='none';
-document.querySelector('#muteBtn #cross').style.display='';
 requestAnimationFrame(frame);
   const dt=Math.min(0.05,(now-last)/1000);last=now;
   if(game.paused)return;
